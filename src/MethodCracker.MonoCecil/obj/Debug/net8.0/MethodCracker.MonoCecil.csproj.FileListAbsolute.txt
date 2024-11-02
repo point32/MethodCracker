@@ -1,0 +1,12 @@
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/bin/Debug/net8.0/MethodCracker.MonoCecil.deps.json
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/bin/Debug/net8.0/MethodCracker.MonoCecil.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/bin/Debug/net8.0/MethodCracker.MonoCecil.pdb
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.GeneratedMSBuildEditorConfig.editorconfig
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.AssemblyInfoInputs.cache
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.AssemblyInfo.cs
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.csproj.CoreCompileInputs.cache
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/refint/MethodCracker.MonoCecil.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.pdb
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/ref/MethodCracker.MonoCecil.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.csproj.AssemblyReference.cache

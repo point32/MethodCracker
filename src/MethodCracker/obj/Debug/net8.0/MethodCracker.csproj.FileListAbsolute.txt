@@ -1,0 +1,11 @@
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/bin/Debug/net8.0/MethodCracker.deps.json
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/bin/Debug/net8.0/MethodCracker.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/bin/Debug/net8.0/MethodCracker.pdb
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/MethodCracker.GeneratedMSBuildEditorConfig.editorconfig
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/MethodCracker.AssemblyInfoInputs.cache
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/MethodCracker.AssemblyInfo.cs
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/MethodCracker.csproj.CoreCompileInputs.cache
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/MethodCracker.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/refint/MethodCracker.dll
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/MethodCracker.pdb
+/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker/obj/Debug/net8.0/ref/MethodCracker.dll
