@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "6SmOHRD98giBCcqR/Bnrn2VXxFf8eOrDnkyofGJeZblp5JGPT2FOZLrpaNG48B8Rg6D4ZTTA1UBuHIHZKzAfvQ==",
+  "dgSpecHash": "5FmOD4S37ZhiPkDwNWq8qTmHtLqEA+aIydA3Ew0IojyMCnlsIJH30PXE4c0ILTAH3YBiA01h4ZrDcW/u8lb+ow==",
   "success": true,
-  "projectFilePath": "/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/MethodCracker.MonoCecil.csproj",
+  "projectFilePath": "D:\\Notran\\MethodCracker\\src\\MethodCracker.MonoCecil\\MethodCracker.MonoCecil.csproj",
   "expectedPackageFiles": [
-    "/root/.nuget/packages/mono.cecil/0.11.6/mono.cecil.0.11.6.nupkg.sha512"
+    "C:\\Users\\83493\\.nuget\\packages\\mono.cecil\\0.11.6\\mono.cecil.0.11.6.nupkg.sha512"
   ],
   "logs": []
 }

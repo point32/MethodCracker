@@ -10,3 +10,12 @@
 /storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.Tasks/obj/Debug/net8.0/refint/MethodCracker.Tasks.dll
 /storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.Tasks/obj/Debug/net8.0/MethodCracker.Tasks.pdb
 /storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.Tasks/obj/Debug/net8.0/ref/MethodCracker.Tasks.dll
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.csproj.AssemblyReference.cache
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.GeneratedMSBuildEditorConfig.editorconfig
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.AssemblyInfoInputs.cache
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.AssemblyInfo.cs
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.csproj.CoreCompileInputs.cache
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.sourcelink.json
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.dll
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\refint\MethodCracker.Tasks.dll
+D:\Notran\MethodCracker\src\MethodCracker.Tasks\obj\Debug\net8.0\MethodCracker.Tasks.pdb

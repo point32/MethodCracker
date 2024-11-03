@@ -36,11 +36,6 @@ public class HookCollection<THookType>(MethodInfo originMethod, IHookLifeTime cl
     /// <summary>
     public object? Execute(object[] parameters)
     {
-        if (HasAnyHook is false)
-        {
-            throw new HookNotFoundException("There must be at least one living hook in the collection!");
-        }
-
         if (m_cachedHooks is null || m_hooks.Any(x => x.HookLifeTime.IsAlive is false))
         {
             GenerateCache();
@@ -49,11 +44,10 @@ public class HookCollection<THookType>(MethodInfo originMethod, IHookLifeTime cl
         object? returnedValue = null;
         foreach (var pair in m_cachedHooks)
         {
-            if (pair.Key.Optiion.HasFlag(HookOption.SoftReplace))
+            if (pair.Key.Option.HasFlag(HookOption.SoftReplace))
             {
                 returnedValue = pair.Value.DynamicInvoke(parameters);
-                isReturnOverrided = true;
-                continue;
+				continue;
             }
 
             _ = pair.Value.DynamicInvoke(parameters);
@@ -85,11 +79,10 @@ public class HookCollection<THookType>(MethodInfo originMethod, IHookLifeTime cl
     internal void GenerateCache()
     {
         Dictionary<Hook, THookType> cachedDelegates = [];
-        List<Hook> hooksToClear = [];
         bool removeOriginHook = false;
 
         switch (m_hooks.Where(x => x.HookLifeTime.IsAlive)
-                .Sum(x => x.Optiion.HasFlag(HookOption.ConflictWithReplaces) ? 1 : 0))
+                .Sum(x => x.Option.HasFlag(HookOption.ConflictWithReplaces) ? 1 : 0))
         {
             case 1:
                 {
@@ -103,28 +96,30 @@ public class HookCollection<THookType>(MethodInfo originMethod, IHookLifeTime cl
                 }
         }
 
-        foreach (var hook in
-                m_hooks.Where(x = x.HookLifeTime.IsAlive)
-                .Order(x => GetHookOptionOrder(x.Option)))
+	
+		var hooks = m_hooks.Where(x => x.HookLifeTime.IsAlive);
+
+		if (!removeOriginHook)
+		{
+            var originMethoHook = new Hook(OriginMethod, HookOption.SoftReplace, Instance, ClassLifeTime);
+		    hooks = hooks.Append(originMethoHook);
+		}
+
+        hooks = hooks.OrderBy(x => GetHookOptionOrder(x.Option));
+        foreach (var hook in hooks)
         {
             if (hook.HookLifeTime.IsAlive is false)
             {
                 continue;
             }
 
-            if (hook.Option.HasFlag(HookOption.ConflictWithOtherReplaces)
-                    && removeOriginHook is false)
-            {
-                var originMethoHook = new Hook(OriginMethod, HookOption.SoftReplace, ClassLifeTime, Instance);
-                var originMethodDelegate = Delegate.CreateDelegate(typeof(HookType), OriginMethod, Instance);
-                cachedDelegates.Add(originMethoHook, originMethodDelegate);
-            }
-
-            var @delegate = Delegate.CreateDelegate(typeof(THookType), hook.Method, hook.Instance);
+            var @delegate = (THookType)Delegate.CreateDelegate(typeof(THookType), hook.Instance, hook.Method);
             cachedDelegates.Add(hook, @delegate);
         }
 
         m_hooks.RemoveAll(x => x.HookLifeTime.IsAlive is false);
+
+		m_cachedHooks = cachedDelegates;
     }
 
     /// <summary>
@@ -145,6 +140,8 @@ public class HookCollection<THookType>(MethodInfo originMethod, IHookLifeTime cl
         }
 
         m_hooks.Add(hook);
+
+		GenerateCache();
     }
 
     /// <summary>
@@ -153,5 +150,6 @@ public class HookCollection<THookType>(MethodInfo originMethod, IHookLifeTime cl
     public void RemoveHook(Hook hook)
     {
         m_hooks.Remove(hook);
+		GenerateCache();
     }
 }

@@ -1,14 +1,14 @@
 namespace MethodCracker;
 
 [Flags]
-enum HookOption
+public enum HookOption
 {
     /// <summary>
     /// Replace new method with methods that is originally here or were added before.
     /// If there's any method was marked with <see cref="HookOption.ConflictWithReplaces"/>,
     /// it will raise an <see cref=“MethodCracker.HookConflictionException“/>
     /// </summary>
-    Replace = SoftReplace | ConflictWithOverrides,
+    Replace = SoftReplace | ConflictWithReplaces,
 
     SoftReplace = 0b0001,
     BeforeOrigin = 0b0010,

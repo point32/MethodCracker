@@ -1,16 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "5MIqzkUzISzMa/oNu6bHZbJvOM+0Bdvn/IJUn9XxnQN2n0TYuaRSIVMq0AIvUS8M0BgxFl0kfR6w9dijOTuCYQ==",
+  "dgSpecHash": "jSO9NFMUoKeEFklly5SgCAtUgzEvXRQ0JAMzjcoeZjdCiEuUQ9wR/K41n6PTLuvcOhKyI4Nhs+eIFFxu3nV9lQ==",
   "success": true,
-  "projectFilePath": "/storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.Tasks/MethodCracker.Tasks.csproj",
+  "projectFilePath": "D:\\Notran\\MethodCracker\\src\\MethodCracker.Tasks\\MethodCracker.Tasks.csproj",
   "expectedPackageFiles": [
-    "/root/.nuget/packages/microsoft.build.framework/17.11.4/microsoft.build.framework.17.11.4.nupkg.sha512",
-    "/root/.nuget/packages/microsoft.build.utilities.core/17.11.4/microsoft.build.utilities.core.17.11.4.nupkg.sha512",
-    "/root/.nuget/packages/microsoft.net.stringtools/17.11.4/microsoft.net.stringtools.17.11.4.nupkg.sha512",
-    "/root/.nuget/packages/system.collections.immutable/8.0.0/system.collections.immutable.8.0.0.nupkg.sha512",
-    "/root/.nuget/packages/system.configuration.configurationmanager/8.0.0/system.configuration.configurationmanager.8.0.0.nupkg.sha512",
-    "/root/.nuget/packages/system.diagnostics.eventlog/8.0.0/system.diagnostics.eventlog.8.0.0.nupkg.sha512",
-    "/root/.nuget/packages/system.security.cryptography.protecteddata/8.0.0/system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
+    "C:\\Users\\83493\\.nuget\\packages\\microsoft.build.framework\\17.11.4\\microsoft.build.framework.17.11.4.nupkg.sha512",
+    "C:\\Users\\83493\\.nuget\\packages\\microsoft.build.utilities.core\\17.11.4\\microsoft.build.utilities.core.17.11.4.nupkg.sha512",
+    "C:\\Users\\83493\\.nuget\\packages\\microsoft.net.stringtools\\17.11.4\\microsoft.net.stringtools.17.11.4.nupkg.sha512",
+    "C:\\Users\\83493\\.nuget\\packages\\system.collections.immutable\\8.0.0\\system.collections.immutable.8.0.0.nupkg.sha512",
+    "C:\\Users\\83493\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
+    "C:\\Users\\83493\\.nuget\\packages\\system.diagnostics.eventlog\\8.0.0\\system.diagnostics.eventlog.8.0.0.nupkg.sha512",
+    "C:\\Users\\83493\\.nuget\\packages\\system.security.cryptography.protecteddata\\8.0.0\\system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
   ],
   "logs": []
 }

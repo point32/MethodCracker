@@ -18,7 +18,7 @@ public class Hook
     /// <summary>
     /// Gets the registration option of the hook. 
     /// <summary>
-    public HookOption Optiion { get; }
+    public HookOption Option { get; }
 
     /// <summary>
     /// Gets the method of the hook.

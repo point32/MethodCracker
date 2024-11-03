@@ -10,3 +10,6 @@
 /storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.pdb
 /storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/ref/MethodCracker.MonoCecil.dll
 /storage/self/primary/.1SharpCodes/Projects/MethodCracker/src/MethodCracker.MonoCecil/obj/Debug/net8.0/MethodCracker.MonoCecil.csproj.AssemblyReference.cache
+D:\Notran\MethodCracker\src\MethodCracker.MonoCecil\obj\Debug\net8.0\MethodCracker.MonoCecil.dll
+D:\Notran\MethodCracker\src\MethodCracker.MonoCecil\obj\Debug\net8.0\refint\MethodCracker.MonoCecil.dll
+D:\Notran\MethodCracker\src\MethodCracker.MonoCecil\obj\Debug\net8.0\MethodCracker.MonoCecil.pdb
