@@ -1,6 +1,6 @@
 namespace MethodCracker;
 
-public interface IHookLifeTime
+public interface ILifeTime
 {
     bool IsAlive { get; }
 }

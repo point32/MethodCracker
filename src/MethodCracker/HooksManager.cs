@@ -7,23 +7,21 @@ namespace MethodCracker;
 
 /// <summary>
 /// Provided to manage hooks of a class inherit <see cref="IHookableClass{IClass}"/>
-/// <summary>
-public class HooksManager
+/// </summary>
+public sealed class HooksManager<TClass> where TClass : IHookableClass<TClass>
 {
-    public HooksManager(Type hookedClass, object? instance)
+    public HooksManager(Type hookedClass)
     {
         if (hookedClass.GetInterfaces().All(x => !x.IsGenericType || x.GetGenericTypeDefinition() != typeof(IHookableClass<>)))
         {
                throw new InvalidOperationException($"\"{hookedClass.FullName}\" isn't implement \"{typeof(IHookableClass<>).FullName}\"");
         }
 
-           HookedClass = hookedClass;
-           Instance = instance;
-       }
+        HookedClass = hookedClass;
+    }
 
     public Type HookedClass { get; }
-    public object? Instance { get; }
-
+    
     private Dictionary<string, IHookCollection> m_collectionByName = [];
 
     public IReadOnlyDictionary<string, IHookCollection> CollectionByName => m_collectionByName.AsReadOnly();
@@ -36,7 +34,7 @@ public class HooksManager
         }
 
         var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic;
-        bindingFlags |= Instance is null ? BindingFlags.Static : BindingFlags.Instance;
+        bindingFlags |= BindingFlags.Static | BindingFlags.Instance;
 
         var hookingMethod = HookedClass.GetMethod(name, bindingFlags);
         if (hookingMethod is null)
@@ -46,13 +44,13 @@ public class HooksManager
 
         if (hookingMethod.CustomAttributes.All(x => x.AttributeType != typeof(CrackableMethodAttribute)))
         {
-               throw new InvalidOperationException($"Specific hook didn't marked with \"{typeof(CrackableMethodAttribute).FullName}\".");
+            throw new InvalidOperationException($"Specific hook didn't marked with \"{typeof(CrackableMethodAttribute).FullName}\".");
         }
 
-           var attribute = hookingMethod.GetCustomAttribute<ProcessedAttribute>();
+        var attribute = hookingMethod.GetCustomAttribute<ProcessedAttribute>();
         if (attribute is null)
         {
-               throw new InvalidProgramException($"Cannot find \"{typeof(ProcessedAttribute)}\" on method \"{name}\".");
+            throw new InvalidProgramException($"Cannot find \"{typeof(ProcessedAttribute)}\" on method \"{name}\".");
         }
 
         var originMethod = HookedClass.GetMethod(attribute.OriginMethodName, bindingFlags);
@@ -61,13 +59,19 @@ public class HooksManager
             throw new OriginMethodNotFoundException();
         }
 
-        m_collectionByName[name] = new HookCollection<THookType>(originMethod, (IHookLifeTime)HookedClass.GetProperty("ClassLifeTime").GetValue(null), Instance);
+        m_collectionByName[name] = new HookCollection<THookType>(originMethod, TClass.LifeTime);
     }
 
     public void AddHook<THookType>(string name, Hook hook) where THookType : Delegate
     {
 		ValidateAndInitializeCollection<THookType>(name);
         m_collectionByName[name].AddHook(hook);
+    }
+
+    public void AddHook<THookType>(string name, THookType hook, HookOption option, ILifeTime hookLifeTime) where THookType : Delegate
+    {
+        ValidateAndInitializeCollection<THookType>(name);
+        AddHook<THookType>(name, new Hook(hook.Method, option, hook.Target, hookLifeTime));
     }
 
     public HookCollection<THookType>? GetHookCollection<THookType>(string name) where THookType : Delegate

@@ -1,7 +1,7 @@
 using MethodCracker;
-using MethodCracker.Attributes;
 
-public class ModuleLifeTime : IHookLifeTime
+namespace ConsoleApp1;
+public class ModuleLifeTime : ILifeTime
 {
     private ModuleLifeTime()
 	{

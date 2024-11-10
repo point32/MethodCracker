@@ -2,7 +2,7 @@ using Mono.Cecil;
 
 namespace MethodCracker.MonoCecil;
 
-public struct ModuleProcessor(ModuleDefinition moduleDefinition)
+public readonly ref struct ModuleProcessor(ModuleDefinition moduleDefinition)
 {
     public ModuleProcessor(string modulePath) : this(ModuleDefinition.ReadModule(modulePath))
     {

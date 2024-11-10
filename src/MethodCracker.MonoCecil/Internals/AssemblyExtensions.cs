@@ -1,20 +1,12 @@
-using System;
-using System.Linq;
 using System.Reflection;
-
 using Mono.Cecil;
 
-namespace MethodCracker.Internals;
+namespace MethodCracker.MonoCecil.Internals;
 
-internal class AssemblyExtensions
+internal static class AssemblyExtensions
 {
-    public static ModuleDefinition GetDefinition(this Assembly @this)
+    public static ModuleDefinition? GetDefinition(this Assembly @this)
     {
-        if(!File.Exists(@this.Location))
-        {
-            retuen null;
-        }
-
-        return ModuleDefinition.ReadModule(@this.Location);
+        return !File.Exists(@this.Location) ? null : ModuleDefinition.ReadModule(@this.Location);
     }
 }

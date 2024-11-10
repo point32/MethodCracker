@@ -1,6 +1,7 @@
 namespace MethodCracker;
 
-public interface IHookableClass<IClass> where IClass : IHookableClass<IClass>
+public interface IHookableClass<TClass> where TClass : IHookableClass<TClass>
 {
-    public static IHookLifeTime ClassLifeTime { get; }
+	public static abstract ILifeTime LifeTime { get; }
+	public static abstract HooksManager<TClass> HooksManager { get; }
 }
