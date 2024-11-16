@@ -39,7 +39,7 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
     {
         if (m_cachedHooks is null || m_hooks.Any(x => x.HookLifeTime.IsAlive is false))
         {
-            GenerateCache(parameters[0]);
+            GenerateCache();
         }
 
         object? returnedValue = null;
@@ -83,7 +83,7 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
         return int.MaxValue;
     }
 
-    internal void GenerateCache(object? target)
+    internal void GenerateCache()
     {
         Dictionary<Hook, THookType> cachedDelegates = [];
         bool removeOriginHook = m_hooks.Any(x => x.HookLifeTime.IsAlive && x.Option.HasFlag(HookOption.SoftReplace));

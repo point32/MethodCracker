@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using System.IO;
 using MethodCracker;
 using MethodCracker.MonoCecil;
 using Mono.Cecil;
-using Mono.Cecil.Rocks;
+
 using static System.Console;
 
-var thisLocation = new DirectoryInfo(typeof(Program).Assembly.Location).Parent.FullName;
+var thisLocation = new DirectoryInfo(typeof(Program).Assembly.Location).Parent!.FullName;
 ModuleDefinition module = ModuleDefinition.ReadModule(Path.Combine(thisLocation, "ConsoleApp1.dll"));
 var moduleProcessor = new ModuleProcessor(module);
 
@@ -20,7 +19,7 @@ foreach (var typeDefinition in module.Types)
         continue;
     }
 
-    List<MethodProcessor> processors = new();
+    List<MethodProcessor> processors = [];
     foreach (var methodDefinition in typeDefinition.Methods)
     {
         var processor = new MethodProcessor(methodDefinition);
@@ -32,13 +31,13 @@ foreach (var typeDefinition in module.Types)
         processors.Add(processor);
     }
 
-    foreach(var toProcess in processors)
+    foreach (MethodProcessor toProcess in processors.Where(toProcess => !toProcess.Process()))
     {
-        Console.WriteLine(toProcess.Process());
+        Error.WriteLine("Failed to process method");
     }
 }
 
 var stream = new MemoryStream();
 moduleProcessor.Save(stream);
 var asm = Assembly.Load(stream.ToArray());
-asm.EntryPoint.Invoke(null, []);
+asm.EntryPoint!.Invoke(null, []);

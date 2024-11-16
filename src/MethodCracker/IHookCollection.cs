@@ -7,4 +7,6 @@ public interface IHookCollection
     void RemoveHook(Hook hook);
 
     IReadOnlyList<Hook> Hooks { get; }
+    
+    object? Execute(object[] parameters);
 }

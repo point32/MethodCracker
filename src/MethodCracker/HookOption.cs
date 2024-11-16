@@ -5,8 +5,8 @@ public enum HookOption
 {
     /// <summary>
     /// Replace new method with methods that is originally here or were added before.
-    /// If there's any method was marked with <see cref="HookOption.ConflictWithReplaces"/>,
-    /// it will raise an <see cref=“MethodCracker.HookConflictionException“/>
+    /// If there's already a method was marked with <see cref="HookOption.ConflictWithReplaces"/> before you add the hook,
+    /// it will raise an <see cref="InvalidOperationException"/> by <see cref="HookCollection{THookType}"/>.
     /// </summary>
     Replace = SoftReplace | ConflictWithReplaces,
 

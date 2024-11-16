@@ -1,13 +1,7 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using MethodCracker.Attributes;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-
-#if DEBUG
-using System.Diagnostics;
-#endif
 
 namespace MethodCracker.MonoCecil;
 
@@ -67,14 +61,12 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
         oldMethodProcessor.Clear();
 
         // To get the hooks manager, we should determine the type of the manager.
-        var hooksManagerTypeReference = Module.ImportReference(typeof(HooksManager<>));
-        var hooksManagerInstance = new GenericInstanceType(hooksManagerTypeReference);
-        hooksManagerInstance.GenericArguments.Add(ParentType);
+        var hooksManagerTypeReference = Module.ImportReference(typeof(HooksManager));
 
         // Get the property of the manager
         var managerProperty = ParentType.Properties.First(x =>
             x.Name is "HooksManager" &&
-            x.GetMethod.ReturnType.FullName == hooksManagerInstance.FullName);
+            x.PropertyType.FullName == hooksManagerTypeReference.FullName);
 
         // This will emit this code:
         // call [MethodCracker]MethodCracker.HooksManager`1<class MyClass> MyClass::get_HooksManager()
@@ -104,33 +96,30 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
         {
             delegateTypeInstance.GenericArguments.Add(methodDefinition.ReturnType);
         }
-
-        var hookCollectionInstance = new GenericInstanceType(Module.ImportReference(typeof(HookCollection<>)));
-        hookCollectionInstance.GenericArguments.Add(delegateTypeInstance);
+        
+        var hookCollectionInterfaceReference = Module.ImportReference(typeof(IHookCollection));
         // HookCollection<THookType>
 
-        var getHookCollectionMethodReturnType = new GenericInstanceType(Module.ImportReference(typeof(HookCollection<>)));
-
-        var getHookCollectionMethodReference = new MethodReference("GetHookCollection", getHookCollectionMethodReturnType, hooksManagerInstance);
-        getHookCollectionMethodReference.Parameters.Add(new ParameterDefinition(Module.ImportReference(typeof(string)))); // Parameter "name"
-
-        var getHookCollectionMethodInstance = new GenericInstanceMethod(getHookCollectionMethodReference);
+        var getHookCollectionMethod = hooksManagerTypeReference.Resolve().Methods
+            .First(x => x.Name == "GetHookCollection"
+                        && x.Parameters.Count == 1
+                        && x.Parameters[0].ParameterType.FullName == "System.String");
+        var getHookCollectionMethodInstance = new GenericInstanceMethod(getHookCollectionMethod);
         getHookCollectionMethodInstance.GenericArguments.Add(delegateTypeInstance);
-        getHookCollectionMethodReturnType.GenericArguments.Add(delegateTypeInstance);
-        // Method signuature: HooksManager<MyClass>::HookCollection<MyDelegateType> GetHookCollection<MyDelegateType>(string name)
+        // Method signature: IHookCollection HooksManager.GetHookCollection<MyDelegateType>(string name)
 
-        oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Callvirt, getHookCollectionMethodInstance));
+        oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Callvirt, Module.ImportReference(getHookCollectionMethodInstance)));
 
         // Then, create an array to store the passed parameters and the instance.
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldc_I4, methodDefinition.Parameters.Count + 1));
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Newarr, Module.ImportReference(typeof(object))));
-
-
+ 
         // Push the method target
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Dup));
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldc_I4_0));
 
-        if (methodDefinition.IsStatic)
+        bool isMethodStatic = methodDefinition.IsStatic;
+        if (isMethodStatic)
         {
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldnull));
         }
@@ -139,7 +128,7 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldarg_0));
         }
 
-        if (methodDefinition is null && ParentType.IsValueType)
+        if (ParentType.IsValueType)
         {
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Box, ParentType));
         }
@@ -154,7 +143,9 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldc_I4, parameter.Index + 1));
 
             // Pushing value
-            oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldarg, parameter.Index + 1));
+            oldMethodProcessor.Append(oldMethodProcessor.Create(
+                OpCodes.Ldarg,
+                isMethodStatic ? parameter.Index : parameter.Index + 1));
             if (parameter.ParameterType.IsValueType)
             {
                 oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Box, parameter.ParameterType));
@@ -164,10 +155,12 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
         }
 
         // This will emit this code:
-        // callvirt instance object class [MethodCracker]MethodCracker.HookCollection`1<class [System.Runtime]System.Action`3<object, int32, int32>>::Execute(object[])
-        var executeMethodReference = Module.ImportReference(new MethodReference("Execute", Module.ImportReference(typeof(object)), getHookCollectionMethodReturnType));
-        executeMethodReference.Parameters.Add(new ParameterDefinition(Module.ImportReference(typeof(object[]))));
-        
+        // callvirt instance object class [MethodCracker]MethodCracker.IHookCollection.Execute(object[])
+        var executeMethod = hookCollectionInterfaceReference.Resolve().Methods.First(x =>
+            x.Name == "Execute"
+            && x.Parameters.Count is 1
+            && x.Parameters[0].ParameterType.FullName == "System.Object[]");
+        var executeMethodReference = Module.ImportReference(executeMethod);
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Callvirt, executeMethodReference));
 
         if (methodDefinition.ReturnType.FullName != typeof(void).FullName)
@@ -209,7 +202,7 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
 
         static string GetSafeNameByName(string name)
         {
-            return UseSpecialCharacterInMethodName ? $"<MethodCrackerGenerated_OriginMethod>{name}"
+            return UseSpecialCharacterInMethodName ? $"$<>__MethodCrackerGenerated_OriginMethod__{name}"
                 : $"__MethodCracker_Generated__{name}";
         }
     }

@@ -17,5 +17,7 @@ public readonly ref struct ModuleProcessor(ModuleDefinition moduleDefinition)
     public void Save(Stream output)
     {
         Module.Write(output);
+        using var fs = File.OpenWrite("D:\\output.dll");
+        Module.Write(fs);
     }
 }

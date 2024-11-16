@@ -1,14 +1,14 @@
-using System.Linq;
 using System.Reflection;
 
 using MethodCracker.Attributes;
+using MethodCracker.Exceptions;
 
 namespace MethodCracker;
 
 /// <summary>
 /// Provided to manage hooks of a class inherit <see cref="IHookableClass{IClass}"/>
 /// </summary>
-public sealed class HooksManager<TClass> where TClass : IHookableClass<TClass>
+public sealed class HooksManager
 {
     public HooksManager(Type hookedClass)
     {
@@ -59,7 +59,8 @@ public sealed class HooksManager<TClass> where TClass : IHookableClass<TClass>
             throw new OriginMethodNotFoundException();
         }
 
-        m_collectionByName[name] = new HookCollection<THookType>(originMethod, TClass.LifeTime);
+        var lifeTime = (ILifeTime)HookedClass.GetProperty("LifeTime")!.GetValue(null)!;
+        m_collectionByName[name] = new HookCollection<THookType>(originMethod, lifeTime);
     }
 
     public void AddHook<THookType>(string name, Hook hook) where THookType : Delegate
@@ -73,10 +74,16 @@ public sealed class HooksManager<TClass> where TClass : IHookableClass<TClass>
         ValidateAndInitializeCollection<THookType>(name);
         AddHook<THookType>(name, new Hook(hook.Method, option, hook.Target, hookLifeTime));
     }
-
-    public HookCollection<THookType>? GetHookCollection<THookType>(string name) where THookType : Delegate
+    
+    public HookCollection<THookType>? GetTypedHookCollection<THookType>(string name) where THookType : Delegate
     {
 		ValidateAndInitializeCollection<THookType>(name);
         return m_collectionByName[name] as HookCollection<THookType>;
+    }
+
+    public IHookCollection GetHookCollection<THookType>(string name) where THookType : Delegate
+    {
+		ValidateAndInitializeCollection<THookType>(name);
+        return m_collectionByName[name];
     }
 }
