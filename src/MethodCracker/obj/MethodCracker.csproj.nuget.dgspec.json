@@ -1,31 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Notran\\MethodCracker\\src\\MethodCracker\\MethodCracker.csproj": {}
+    "/root/Projects/CSharp/MethodCracker/src/MethodCracker/MethodCracker.csproj": {}
   },
   "projects": {
-    "D:\\Notran\\MethodCracker\\src\\MethodCracker\\MethodCracker.csproj": {
+    "/root/Projects/CSharp/MethodCracker/src/MethodCracker/MethodCracker.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Notran\\MethodCracker\\src\\MethodCracker\\MethodCracker.csproj",
+        "projectUniqueName": "/root/Projects/CSharp/MethodCracker/src/MethodCracker/MethodCracker.csproj",
         "projectName": "MethodCracker",
-        "projectPath": "D:\\Notran\\MethodCracker\\src\\MethodCracker\\MethodCracker.csproj",
-        "packagesPath": "C:\\Users\\83493\\.nuget\\packages\\",
-        "outputPath": "D:\\Notran\\MethodCracker\\src\\MethodCracker\\obj\\",
+        "projectPath": "/root/Projects/CSharp/MethodCracker/src/MethodCracker/MethodCracker.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/root/Projects/CSharp/MethodCracker/src/MethodCracker/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\83493\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://nuget.cdn.azure.cn/v3/index.json": {},
-          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -37,11 +32,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -63,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

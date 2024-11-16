@@ -41,4 +41,9 @@ public class Program : IHookableClass<Program>
 		Console.WriteLine($"Origin foo with {Test2}");
 		return a + b;
 	}
+
+        public int Expected(int a, int b)
+        {
+            return (int)HooksManager.GetHookCollection<Func<int, int, int>>("Foo").Execute([this, a, b]);
+        }
 }
