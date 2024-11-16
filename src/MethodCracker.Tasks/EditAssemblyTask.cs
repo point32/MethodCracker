@@ -1,16 +1,14 @@
-using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
-namespace MethodCracker;
+namespace MethodCracker.Tasks;
 
 class EditAssemblyTask : ITask
 {
     public IBuildEngine BuildEngine { get; set; } = null!;
+    public ITaskHost HostObject { get; set; }
 
-    [Required]
-    public string
     public bool Execute()
     {
-        forea
+        return true;
     }
 }
