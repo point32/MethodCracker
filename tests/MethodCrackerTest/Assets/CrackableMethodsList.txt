@@ -1,0 +1,9 @@
+[Module1]
+MyClass3:MyMethod1(string, int)
+MyClass2:MyMethod2(int, string)
+MyClass1:MyMethod3(string, string)
+
+[Module2]
+Class1:MyMethod1(string, string)
+Class2:MyMethod2(string)
+Class3:MyMethod3(string)

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using MethodCracker;
 using MethodCracker.Attributes;
 
@@ -10,6 +11,7 @@ public class Program : IHookableClass<Program>
 	public static HooksManager HooksManager { get; } = new (typeof(Program));
 	public static void Main()
 	{
+		Debugger.Launch();
 		HooksManager.AddHook("Foo", NewFoo, HookOption.Replace, LifeTime);
 		Foo(111);
 	}

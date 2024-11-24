@@ -5,12 +5,35 @@ using Mono.Cecil.Cil;
 
 namespace MethodCracker.MonoCecil;
 
-public struct MethodProcessor(MethodDefinition methodDefinition)
+/// <summary>
+/// A processor to process a method.
+/// </summary>
+/// <param name="methodDefinition">Definition of the method</param>
+public readonly struct MethodProcessor(MethodDefinition methodDefinition)
 {
+    /// <summary>
+    /// A global flag, indicates whether the processor should use special '$&lt;&gt;' as the method name prefix.
+    /// </summary>
     public static bool UseSpecialCharacterInMethodName = true;
-    private ModuleDefinition Module => methodDefinition.Module;
-    private TypeDefinition ParentType => methodDefinition.DeclaringType;
 
+    /// <summary>
+    /// The module which the method belongs to.
+    /// </summary>
+    public ModuleDefinition Module => methodDefinition.Module;
+
+    /// <summary>
+    /// The type which the method belongs to.
+    /// </summary>
+    public TypeDefinition ParentType => methodDefinition.DeclaringType;
+
+    /// <summary>
+    /// Process the method to make it hookable,
+    /// may throw an exception under some conditions.
+    /// </summary>
+    /// <returns>
+    /// False when the method has already been processed,
+    /// and will be true when the method is successfully processed.
+    /// </returns>
     public bool Process()
     {
         if (!IsProcessEnabled)
@@ -135,26 +158,29 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
         
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Stelem_Ref));
 
+        // Push the parameters into an array (object[])
         foreach (var parameter in methodDefinition.Parameters)
         {
+            // Duplicate the array
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Dup));
-
-            // Pushing index
+            
+            // Prepare an index(int)
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ldc_I4, parameter.Index + 1));
-
-            // Pushing value
+            
+            // Prepare an argument(object)
             oldMethodProcessor.Append(oldMethodProcessor.Create(
                 OpCodes.Ldarg,
                 isMethodStatic ? parameter.Index : parameter.Index + 1));
             if (parameter.ParameterType.IsValueType)
             {
+                // If the argument is a value type, box it
                 oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Box, parameter.ParameterType));
             }
 
+            // Store the argument into the array
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Stelem_Ref));
         }
 
-        // This will emit this code:
         // callvirt instance object class [MethodCracker]MethodCracker.IHookCollection.Execute(object[])
         var executeMethod = hookCollectionInterfaceReference.Resolve().Methods.First(x =>
             x.Name == "Execute"
@@ -163,8 +189,10 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
         var executeMethodReference = Module.ImportReference(executeMethod);
         oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Callvirt, executeMethodReference));
 
+        // Process the returned value
         if (methodDefinition.ReturnType.FullName != typeof(void).FullName)
         {
+            // If the returned value is a value type, unbox it.
             if (methodDefinition.ReturnType.IsValueType)
             {
                 oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Unbox_Any, methodDefinition.ReturnType));
@@ -174,15 +202,17 @@ public struct MethodProcessor(MethodDefinition methodDefinition)
                 oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Castclass, methodDefinition.ReturnType));
             }
 
+            // Return the value
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ret));
         }
         else
         {
+            // Discard the returned value, and return
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Pop));
             oldMethodProcessor.Append(oldMethodProcessor.Create(OpCodes.Ret));
         }
 
-        // Add 'ProcessedAttribute'
+        // Add 'ProcessedAttribute' with to the method
         var processedAttributeConstructor = Module.ImportReference(
             typeof(ProcessedAttribute).GetConstructor([typeof(string)])
             );
