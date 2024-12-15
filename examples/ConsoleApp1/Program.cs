@@ -1,29 +1,32 @@
-using System.Diagnostics;
 using MethodCracker;
-using MethodCracker.Attributes;
 
 namespace ConsoleApp1;
 
-public class Program : IHookableClass<Program>
+public class Program
 {
-	public static ILifeTime LifeTime => ModuleLifeTime.Instance;
+    public static void Run()
+    {
+        LifeTimeManager.RegisterMapping(new LifeTimeMapper());
 
-	public static HooksManager HooksManager { get; } = new (typeof(Program));
-	public static void Main()
-	{
-		Debugger.Launch();
-		HooksManager.AddHook("Foo", NewFoo, HookOption.Replace, LifeTime);
-		Foo(111);
-	}
+        var program = new Program
+        {
+            Test = 3
+        };
+        var programOverride = new ProgramOverride()
+        {
+            Test2 = 0.05f
+        };
+        
+        GlobalHooksManager.GetHooksManager(typeof(Program))
+            .AddHook("Foo", programOverride.FooOverride, HookOption.AfterOrigin, ModuleLifeTime.Instance);
+        
+        program.Foo(111);
+    }
 
-	[CrackableMethod]
-	public static void Foo(int a)
-	{
-		Console.WriteLine($"正在调用原版 Foo，a 的值为：{a}");
-	}
+    public int Test = 0;
 
-	private static void NewFoo(object instance, int a)
-	{
-		Console.WriteLine($"原版 Foo 已经被拦截，a 的值为：{a}");
-	}
+    private void Foo(int a)
+    {
+        Console.WriteLine($"There is 'NewFoo', value of 'a' is：{a}, value of 'Test' is：{Test}");
+    }
 }

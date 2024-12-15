@@ -5,12 +5,16 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PublishAot>true</PublishAot>
+        <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\MethodCracker.MonoCecil\MethodCracker.MonoCecil.csproj"/>
-        <ProjectReference Include="..\..\src\MethodCracker\MethodCracker.csproj"/>
-        <ProjectReference Include="..\ConsoleApp1\ConsoleApp1.csproj"/>
+        <ProjectReference Include="..\src\MethodCracker\MethodCracker.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.0"/>
     </ItemGroup>
 
 </Project>

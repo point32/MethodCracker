@@ -36,4 +36,3 @@ public sealed class Hook
     /// </summary>
     public ILifeTime HookLifeTime { get; }
 }
-

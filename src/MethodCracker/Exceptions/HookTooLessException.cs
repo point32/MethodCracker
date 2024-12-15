@@ -9,6 +9,7 @@ namespace MethodCracker.Exceptions;
 /// <param name="hookDescription">
 /// The description for the hook.
 /// </param>
-class HookNotFoundException(string hookDescription) : Exception($"Specefic hook not found!\nReason:{hookDescription}")
+internal class HookNotFoundException(string hookDescription)
+    : Exception($"Specefic hook not found!\nReason:{hookDescription}")
 {
 }

@@ -1,43 +1,55 @@
 ﻿using System.Reflection;
-using MethodCracker;
 using MethodCracker.MonoCecil;
-using Mono.Cecil;
+using MethodCracker.ProcessorConfig;
 
-using static System.Console;
+string thisLocation = new DirectoryInfo(typeof(Program).Assembly.Location).Parent!.FullName;
+Dictionary<string, MemoryStream> modules = [];
 
-var thisLocation = new DirectoryInfo(typeof(Program).Assembly.Location).Parent!.FullName;
-ModuleDefinition module = ModuleDefinition.ReadModule(Path.Combine(thisLocation, "ConsoleApp1.dll"));
-var moduleProcessor = new ModuleProcessor(module);
-
-foreach (var typeDefinition in module.Types)
+using var stringReader = new StringReader(
+    @"
+[ConsoleApp1]
+ConsoleApp1.Program:Foo(int)
+");
+CrackableMethodsList processorConfig = CrackableMethodsList.Deserialize(stringReader);
+var processor = new MethodCrackerProcessor(processorConfig, x =>
 {
-    var interfaceReference = module.ImportReference(typeof(IHookableClass<>));
-    var interfaceInstanceType = new GenericInstanceType(interfaceReference);
-    interfaceInstanceType.GenericArguments.Add(module.ImportReference(typeDefinition));
-    if (typeDefinition.Interfaces.All(x => x.InterfaceType.FullName != interfaceInstanceType.FullName))
+    modules[x] = ResolveModule(x);
+    return modules[x];
+});
+
+processor.Process();
+
+Assembly? consoleApp1 = null;
+
+foreach (KeyValuePair<string, MemoryStream> moduleNameStreamPair in modules)
+{
+    Assembly asm = Assembly.Load(moduleNameStreamPair.Value.ToArray());
+    if (moduleNameStreamPair.Key == "ConsoleApp1")
     {
-        continue;
+        consoleApp1 = asm;
     }
 
-    List<MethodProcessor> processors = [];
-    foreach (var methodDefinition in typeDefinition.Methods)
-    {
-        var processor = new MethodProcessor(methodDefinition);
-        if (!processor.IsProcessEnabled)
-        {
-            continue;
-        }
-
-        processors.Add(processor);
-    }
-
-    foreach (MethodProcessor toProcess in processors.Where(toProcess => !toProcess.Process()))
-    {
-        Error.WriteLine("Failed to process method");
-    }
+    moduleNameStreamPair.Value.Dispose();
 }
 
-var stream = new MemoryStream();
-moduleProcessor.Save(stream);
-var asm = Assembly.Load(stream.ToArray());
-asm.EntryPoint!.Invoke(null, []);
+var method = consoleApp1?.GetType("ConsoleApp1.Program")?.GetMethod("Run") ?? throw new Exception("Entry point not found");
+method.Invoke(null, null);
+return;
+
+MemoryStream ResolveModule(string name)
+{
+    switch (name)
+    {
+        case "ConsoleApp1":
+        {
+            var stream = new MemoryStream();
+            using FileStream file = File.OpenRead(Path.Combine(thisLocation, "ConsoleApp1.dll"));
+            file.CopyTo(stream);
+            return stream;
+        }
+        default:
+        {
+            throw new Exception("Unknown module");
+        }
+    }
+}

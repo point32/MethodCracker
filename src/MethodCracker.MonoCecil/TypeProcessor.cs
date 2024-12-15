@@ -1,6 +1,7 @@
-namespace MethodCracker.MonoCecil;
+//namespace MethodCracker.MonoCecil;
+//
+//public class TypeProcessor
+//{
+//
+//}
 
-public class TypeProcessor
-{
-    
-}

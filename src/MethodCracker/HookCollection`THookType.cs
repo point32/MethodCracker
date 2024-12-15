@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
 using MethodCracker.Exceptions;
 using System.Reflection;
 
 namespace MethodCracker;
 
-public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime classLifeTime) : IHookCollection where THookType : Delegate
+public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime classLifeTime)
+    : IHookCollection where THookType : Delegate
 {
     internal List<Hook> m_hooks = [];
     internal Dictionary<Hook, THookType>? m_cachedHooks;
@@ -35,26 +35,23 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
     /// when calling this, you should make sure that the first of
     /// the parameters is the instance of the hooked class.
     /// </summary>
-    public object? Execute(object[] parameters)
+    public object? Execute(object?[] parameters)
     {
-        if (m_cachedHooks is null || m_hooks.Any(x => x.HookLifeTime.IsAlive is false))
-        {
-            GenerateCache();
-        }
+        if (m_cachedHooks is null || m_hooks.Any(x => x.HookLifeTime.IsAlive is false)) GenerateCache();
 
         object? returnedValue = null;
-        foreach (var pair in m_cachedHooks!)
+        foreach (KeyValuePair<Hook, THookType> pair in m_cachedHooks!)
         {
             if (pair.Key.Method == OriginMethod)
             {
                 returnedValue = pair.Key.Method.Invoke(parameters[0], parameters[1..]);
                 continue;
             }
-            
+
             if (pair.Key.Option.HasFlag(HookOption.SoftReplace))
             {
                 returnedValue = pair.Value.DynamicInvoke(parameters);
-				continue;
+                continue;
             }
 
             _ = pair.Value.DynamicInvoke(parameters);
@@ -65,20 +62,11 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
 
     private int GetHookOptionOrder(HookOption option)
     {
-        if (option.HasFlag(HookOption.BeforeOrigin))
-        {
-            return 0;
-        }
+        if (option.HasFlag(HookOption.BeforeOrigin)) return 0;
 
-        if (option.HasFlag(HookOption.AfterOrigin))
-        {
-            return 2;
-        }
+        if (option.HasFlag(HookOption.AfterOrigin)) return 2;
 
-        if (option.HasFlag(HookOption.SoftReplace))
-        {
-            return 1;
-        }
+        if (option.HasFlag(HookOption.SoftReplace)) return 1;
 
         return int.MaxValue;
     }
@@ -89,11 +77,9 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
         bool removeOriginHook = m_hooks.Any(x => x.HookLifeTime.IsAlive && x.Option.HasFlag(HookOption.SoftReplace));
 
         if (m_hooks.Count(x => x.HookLifeTime.IsAlive && x.Option.HasFlag(HookOption.ConflictWithReplaces)) > 1)
-        {
             throw new InvalidOperationException("Hook conflicted.");
-        }
-	
-        var hooks = m_hooks.Where(x => x.HookLifeTime.IsAlive);
+
+        IEnumerable<Hook> hooks = m_hooks.Where(x => x.HookLifeTime.IsAlive);
 
         if (!removeOriginHook)
         {
@@ -102,12 +88,9 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
         }
 
         hooks = hooks.OrderBy(x => GetHookOptionOrder(x.Option));
-        foreach (var hook in hooks)
+        foreach (Hook hook in hooks)
         {
-            if (hook.HookLifeTime.IsAlive is false)
-            {
-                continue;
-            }
+            if (hook.HookLifeTime.IsAlive is false) continue;
 
             if (hook.Method == OriginMethod)
             {
@@ -134,9 +117,8 @@ public sealed class HookCollection<THookType>(MethodInfo originMethod, ILifeTime
         ArgumentNullException.ThrowIfNull(hook);
 
         if (m_hooks.Contains(hook))
-        {
-            throw new InvalidOperationException($"The hook '{hook.Method.Name}' in type '{hook.Method.DeclaringType!.FullName}' has already been added.");
-        }
+            throw new InvalidOperationException(
+                $"The hook '{hook.Method.Name}' in type '{hook.Method.DeclaringType!.FullName}' has already been added.");
 
         m_hooks.Add(hook);
         m_cachedHooks = null;

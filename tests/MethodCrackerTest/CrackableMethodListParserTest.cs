@@ -7,10 +7,10 @@ public partial class Tests
     [Test]
     public void TestMethodListParser()
     {
-        using var stream = typeof(Tests).Assembly
+        using Stream? stream = typeof(Tests).Assembly
             .GetManifestResourceStream("MethodCrackerTest.Assets.CrackableMethodsList.txt")!;
         TextReader reader = new StreamReader(stream);
-        var list = CrackableMethodsList.Deserialize(reader);
+        CrackableMethodsList? list = CrackableMethodsList.Deserialize(reader);
         Assert.Multiple(() =>
         {
             Assert.That(list.CrackableModules, Has.Count.EqualTo(2));
